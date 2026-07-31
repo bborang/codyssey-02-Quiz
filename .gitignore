@@ -1,0 +1,25 @@
+# Python Quiz Game (.gitignore)
+
+# Mac OS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual Environment (if any)
+venv/
+.venv/
+env/
+.env/
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# (Optional) You can choose to ignore the saved game data if you don't want to commit your personal score.
+# state.json
