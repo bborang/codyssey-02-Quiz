@@ -1,6 +1,6 @@
 import sys
 from utils import get_valid_input
-from quiz import get_default_docker_quizzes
+from quiz import get_default_docker_quizzes, Quiz
 
 def display_menu():
     print("\n========================================")
@@ -45,6 +45,44 @@ def play_quiz(quizzes):
     print("========================================")
     return score
 
+def get_valid_string(prompt_text):
+    """빈칸을 허용하지 않는 문자열 입력 유틸리티"""
+    while True:
+        text = input(prompt_text).strip()
+        if not text:
+            print("빈 칸을 입력할 수 없습니다. 다시 입력해주세요.")
+            continue
+        return text
+
+def add_quiz(quizzes):
+    """새로운 퀴즈 추가 기능"""
+    print("\n📌 새로운 퀴즈를 추가합니다.")
+    question = get_valid_string("문제를 입력하세요: ")
+    
+    choices = []
+    for i in range(1, 5):
+        choice_text = get_valid_string(f"선택지 {i}: ")
+        choices.append(choice_text)
+        
+    # 예외 처리가 완비된 utils.py의 함수 사용
+    answer = get_valid_input("정답 번호 (1-4): ", 1, 4)
+    
+    new_quiz = Quiz(question, choices, answer)
+    quizzes.append(new_quiz)
+    print("\n 퀴즈가 성공적으로 추가되었습니다!")
+
+def list_quizzes(quizzes):
+    """등록된 퀴즈 목록 출력 기능"""
+    print(f"\n📋 등록된 퀴즈 목록 (총 {len(quizzes)}개)")
+    print("----------------------------------------")
+    for i, quiz in enumerate(quizzes, 1):
+        print(f"[{i}] {quiz.question}")
+    print("----------------------------------------")
+
+def show_best_score(best_score):
+    """최고 점수 출력 기능"""
+    print(f"\n🏆 현재 최고 점수: {best_score}점")
+
 def main():
     # 현재는 기본 제공 퀴즈 5개만 로드해서 변수에 담아둡니다 (나중에 파일로 관리 예정)
     quizzes = get_default_docker_quizzes()
@@ -63,13 +101,13 @@ def main():
                     best_score = current_score
                     
             elif choice == 2:
-                print("\n🛠️ [기능 준비 중] 퀴즈 추가 기능이 곧 추가됩니다!")
+                add_quiz(quizzes)
             elif choice == 3:
-                print("\n🛠️ [기능 준비 중] 퀴즈 목록 조회 기능이 곧 추가됩니다!")
+                list_quizzes(quizzes)
             elif choice == 4:
-                print("\n🛠️ [기능 준비 중] 최고 점수 확인 기능이 곧 추가됩니다!")
+                show_best_score(best_score)
             elif choice == 5:
-                print("\n👋 게임을 정상적으로 종료합니다. 안녕히 가세요!")
+                print("\n 게임을 정상적으로 종료합니다.")
                 break
                 
         # Ctrl+C (KeyboardInterrupt) 또는 Ctrl+D (EOFError) 로 강제 종료 시 예외 처리
