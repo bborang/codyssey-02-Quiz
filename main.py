@@ -1,6 +1,41 @@
 import sys
+import os
+import json
 from utils import get_valid_input
 from quiz import get_default_docker_quizzes, Quiz
+
+STATE_FILE = "state.json"
+
+def load_data():
+    """state.json 파일에서 데이터를 불러옵니다."""
+    if not os.path.exists(STATE_FILE):
+        print("\n📂 저장된 데이터가 없습니다. 기본 도커 퀴즈 데이터를 불러옵니다.")
+        return get_default_docker_quizzes(), 0
+        
+    try:
+        with open(STATE_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            
+        quizzes = [Quiz.from_dict(q) for q in data.get("quizzes", [])]
+        best_score = data.get("best_score", 0)
+        print(f"\n📂 저장된 데이터를 성공적으로 불러왔습니다. (퀴즈 {len(quizzes)}개, 최고점수 {best_score}점)")
+        return quizzes, best_score
+        
+    except (json.JSONDecodeError, Exception):
+        print("\n⚠️ 데이터 파일이 손상되었습니다. 기본 데이터를 불러옵니다.")
+        return get_default_docker_quizzes(), 0
+
+def save_data(quizzes, best_score):
+    """현재 퀴즈 목록과 최고 점수를 state.json에 저장합니다."""
+    data = {
+        "quizzes": [q.to_dict() for q in quizzes],
+        "best_score": best_score
+    }
+    try:
+        with open(STATE_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+    except Exception as e:
+        print(f"\n⚠️ 데이터 저장 중 오류가 발생했습니다: {e}")
 
 def display_menu():
     print("\n========================================")
@@ -9,7 +44,7 @@ def display_menu():
     print("1. 퀴즈 풀기")
     print("2. 퀴즈 추가")
     print("3. 퀴즈 목록")
-    print("4. 점수 확인")
+    print("4. 최고 점수 확인")
     print("5. 종료")
     print("========================================")
 
@@ -84,9 +119,8 @@ def show_best_score(best_score):
     print(f"\n🏆 현재 최고 점수: {best_score}점")
 
 def main():
-    # 현재는 기본 제공 퀴즈 5개만 로드해서 변수에 담아둡니다 (나중에 파일로 관리 예정)
-    quizzes = get_default_docker_quizzes()
-    best_score = 0
+    # state.json에서 데이터를 불러옵니다.
+    quizzes, best_score = load_data()
     
     while True:
         try:
@@ -94,25 +128,32 @@ def main():
             choice = get_valid_input("원하시는 메뉴 번호를 입력하세요: ", 1, 5)
             
             if choice == 1:
-                # 퀴즈 풀기 실행 후 반환된 점수가 현재 최고 점수보다 높으면 갱신
+                # 퀴즈 풀기 실행 후 반환된 점수가 현재 최고 점수보다 높으면 갱신 및 자동 저장
                 current_score = play_quiz(quizzes)
                 if current_score > best_score:
                     print("🎉 새로운 최고 점수입니다!")
                     best_score = current_score
+                    save_data(quizzes, best_score)
                     
             elif choice == 2:
                 add_quiz(quizzes)
+                save_data(quizzes, best_score)  # 추가된 퀴즈 자동 저장
+                
             elif choice == 3:
                 list_quizzes(quizzes)
+                
             elif choice == 4:
                 show_best_score(best_score)
+                
             elif choice == 5:
-                print("\n 게임을 정상적으로 종료합니다.")
+                print("\n👋 게임을 정상적으로 종료합니다. 안녕히 가세요!")
+                save_data(quizzes, best_score)
                 break
                 
         # Ctrl+C (KeyboardInterrupt) 또는 Ctrl+D (EOFError) 로 강제 종료 시 예외 처리
         except (KeyboardInterrupt, EOFError):
-            print("\n\n⚠️ 비정상적인 종료가 감지되었습니다. 게임을 안전하게 종료합니다.")
+            print("\n\n⚠️ 비정상적인 종료가 감지되었습니다. 데이터를 안전하게 저장하고 종료합니다.")
+            save_data(quizzes, best_score)
             sys.exit(0)
 
 if __name__ == "__main__":

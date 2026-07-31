@@ -1,0 +1,55 @@
+{
+    "quizzes": [
+        {
+            "question": "Docker 컨테이너를 최초로 생성하고 실행하는 명령어는?",
+            "choices": [
+                "docker start",
+                "docker run",
+                "docker exec",
+                "docker build"
+            ],
+            "answer": 2
+        },
+        {
+            "question": "이미지 생성을 위해 작성하는 자동화 레시피 파일의 이름은?",
+            "choices": [
+                "docker-compose.yml",
+                "Dockerfile",
+                "Dockerconfig",
+                "Makefile"
+            ],
+            "answer": 2
+        },
+        {
+            "question": "현재 내 컴퓨터에 실행 중인 컨테이너 목록을 확인하는 명령어는?",
+            "choices": [
+                "docker ps",
+                "docker list",
+                "docker images",
+                "docker info"
+            ],
+            "answer": 1
+        },
+        {
+            "question": "새로운 터미널 세션을 열기 위해, 실행 중인 컨테이너 내부에 접속하여 터미널을 열기 위해 사용하는 명령어는?",
+            "choices": [
+                "docker attach",
+                "docker ssh",
+                "docker exec",
+                "docker enter"
+            ],
+            "answer": 3
+        },
+        {
+            "question": "컨테이너를 삭제해도 데이터가 날아가지 않게 저장소를 연결하는 개념은?",
+            "choices": [
+                "Port Mapping",
+                "Docker Network",
+                "Docker Hub",
+                "Volume"
+            ],
+            "answer": 4
+        }
+    ],
+    "best_score": 0
+}
