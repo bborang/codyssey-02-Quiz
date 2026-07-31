@@ -18,8 +18,13 @@ def get_valid_input(prompt_text, min_val, max_val):
                 print("아무것도 입력하지 않으셨습니다. 다시 입력해주세요.")
                 continue
             
-            # 문자열이 숫자로 변환될 수 있는지 확인 (숫자가 아니면 ValueError 발생)
+            # 문자열이 숫자로 변환될 수 있는지 확인 (소수점(4.5)이나 문자열(abc)이면 ValueError 발생)
             choice = int(user_input)
+            
+            # '004' 처럼 앞에 0이 붙거나 불필요한 기호가 포함된 비정상적인 입력 방어
+            if str(choice) != user_input:
+                print("⚠️ 0으로 시작하는 숫자나 비정상적인 형태는 입력할 수 없습니다.")
+                continue
             
             # 지정된 범위 밖의 숫자 방어
             if choice < min_val or choice > max_val:
@@ -29,7 +34,7 @@ def get_valid_input(prompt_text, min_val, max_val):
             return choice
             
         except ValueError:
-            print("⚠️ 숫자가 아닙니다. 올바른 숫자를 입력해주세요.")
+            print("⚠️ 숫자(정수)가 아닙니다. 올바른 숫자를 입력해주세요.")
         except KeyboardInterrupt:
             # Ctrl+C가 눌렸을 때 비정상 종료(Traceback 출력)되지 않도록 예외 던지기
             raise KeyboardInterrupt
