@@ -1,5 +1,6 @@
 import sys
 from utils import get_valid_input
+from quiz import get_default_docker_quizzes
 
 def display_menu():
     print("\n========================================")
@@ -12,15 +13,55 @@ def display_menu():
     print("5. 종료")
     print("========================================")
 
+def play_quiz(quizzes):
+    """퀴즈 출제 및 채점 로직"""
+    if not quizzes:
+        print("\n⚠️ 등록된 퀴즈가 없습니다! 2번 메뉴를 통해 퀴즈를 추가해주세요.")
+        return 0
+
+    print(f"\n📝 퀴즈를 시작합니다! (총 {len(quizzes)}문제)")
+    score = 0
+    
+    for i, quiz in enumerate(quizzes, 1):
+        print("\n----------------------------------------")
+        print(f"[문제 {i}]")
+        print(quiz.question, "\n")
+        
+        for idx, choice_text in enumerate(quiz.choices, 1):
+            print(f"  {idx}. {choice_text}")
+        print()
+        
+        # utils.py의 함수를 재사용하여 1~4번 내에서만 정답을 입력받도록 방어
+        user_answer = get_valid_input("정답 번호 입력: ", 1, 4)
+        
+        if user_answer == quiz.answer:
+            print("✅ 정답입니다!")
+            score += 1
+        else:
+            print(f"❌ 오답입니다! (정답은 {quiz.answer}번)")
+            
+    print("\n========================================")
+    print(f"🏆 결과: {len(quizzes)}문제 중 {score}문제 정답!")
+    print("========================================")
+    return score
+
 def main():
+    # 현재는 기본 제공 퀴즈 5개만 로드해서 변수에 담아둡니다 (나중에 파일로 관리 예정)
+    quizzes = get_default_docker_quizzes()
+    best_score = 0
+    
     while True:
         try:
             display_menu()
-            # utils.py에 만들어둔 예외 처리 함수를 사용하여 안전하게 1~5번 사이의 숫자만 입력 받기
             choice = get_valid_input("원하시는 메뉴 번호를 입력하세요: ", 1, 5)
             
             if choice == 1:
-                print("\n🛠️ [기능 준비 중] 퀴즈 풀기 기능이 곧 추가됩니다!")
+                # 퀴즈 풀기 실행 후 반환된 점수가 현재 최고 점수보다 높으면 갱신
+                current_score = play_quiz(quizzes)
+                if current_score > best_score:
+                    print("🎉 새로운 최고 점수입니다!")
+                    best_score = current_score
+                    
             elif choice == 2:
                 print("\n🛠️ [기능 준비 중] 퀴즈 추가 기능이 곧 추가됩니다!")
             elif choice == 3:
@@ -33,7 +74,7 @@ def main():
                 
         # Ctrl+C (KeyboardInterrupt) 또는 Ctrl+D (EOFError) 로 강제 종료 시 예외 처리
         except (KeyboardInterrupt, EOFError):
-            print("\n\n 비정상적인 종료가 감지되었습니다. 게임을 안전하게 종료합니다.")
+            print("\n\n⚠️ 비정상적인 종료가 감지되었습니다. 게임을 안전하게 종료합니다.")
             sys.exit(0)
 
 if __name__ == "__main__":
