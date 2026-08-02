@@ -1,6 +1,7 @@
 import os
 import json
 import random
+from datetime import datetime
 from utils import get_valid_input
 
 def get_valid_string(prompt_text):
@@ -86,6 +87,7 @@ class QuizGame:
     def __init__(self):
         self.quizzes = []
         self.best_score = 0
+        self.history = []
         self.load_data()
 
     def load_data(self):
@@ -94,6 +96,7 @@ class QuizGame:
             print("\n📂 저장된 데이터가 없습니다. 기본 파이썬 기초 퀴즈 데이터를 불러옵니다.")
             self.quizzes = get_default_python_quizzes()
             self.best_score = 0
+            self.history = []
             return
             
         try:
@@ -102,18 +105,21 @@ class QuizGame:
                 
             self.quizzes = [Quiz.from_dict(q) for q in data.get("quizzes", [])]
             self.best_score = data.get("best_score", 0)
+            self.history = data.get("history", [])
             print(f"\n📂 저장된 데이터를 성공적으로 불러왔습니다. (퀴즈 {len(self.quizzes)}개, 최고점수 {self.best_score}점)")
             
         except (json.JSONDecodeError, Exception):
             print("\n⚠️ 데이터 파일이 손상되었습니다. 기본 데이터를 불러옵니다.")
             self.quizzes = get_default_python_quizzes()
             self.best_score = 0
+            self.history = []
 
     def save_data(self):
-        """현재 퀴즈 목록과 최고 점수를 state.json에 저장합니다."""
+        """현재 퀴즈 목록, 최고 점수, 플레이 기록을 state.json에 저장합니다."""
         data = {
             "quizzes": [q.to_dict() for q in self.quizzes],
-            "best_score": self.best_score
+            "best_score": self.best_score,
+            "history": self.history
         }
         try:
             with open(self.STATE_FILE, "w", encoding="utf-8") as f:
@@ -175,7 +181,15 @@ class QuizGame:
         if score > self.best_score:
             print("🎉 새로운 최고 점수입니다!")
             self.best_score = score
-            self.save_data()
+            
+        # 보너스 과제 5: 게임 기록 히스토리 누적 저장
+        now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.history.append({
+            "date": now_str,
+            "played": num_to_play,
+            "score": score
+        })
+        self.save_data()
 
     def add_quiz(self):
         """새로운 퀴즈 추가 기능"""
@@ -207,8 +221,17 @@ class QuizGame:
         print("----------------------------------------")
 
     def show_best_score(self):
-        """최고 점수 출력 기능"""
+        """최고 점수 및 게임 기록 히스토리 출력 기능"""
         print(f"\n🏆 현재 최고 점수: {self.best_score}점")
+        
+        print("\n📜 [최근 게임 기록 히스토리]")
+        if not self.history:
+            print("  아직 플레이 기록이 없습니다.")
+        else:
+            # 리스트의 뒤에서부터(가장 최근) 최대 5개까지만 슬라이싱하여 보여줌
+            for idx, record in enumerate(self.history[-5:], 1):
+                print(f"  {idx}. {record['date']} | {record['played']}문제 중 {record['score']}문제 정답")
+        print("----------------------------------------")
 
     def delete_quiz(self):
         """등록된 퀴즈 삭제 기능 (보너스 과제)"""
