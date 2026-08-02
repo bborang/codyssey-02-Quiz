@@ -1,5 +1,6 @@
 import os
 import json
+import random
 from utils import get_valid_input
 
 def get_valid_string(prompt_text):
@@ -116,7 +117,10 @@ class QuizGame:
         print(f"\n📝 퀴즈를 시작합니다! (총 {len(self.quizzes)}문제)")
         score = 0
         
-        for i, quiz in enumerate(self.quizzes, 1):
+        # 보너스 과제 1: 퀴즈 순서 랜덤 섞기
+        play_list = random.sample(self.quizzes, len(self.quizzes))
+        
+        for i, quiz in enumerate(play_list, 1):
             print("\n----------------------------------------")
             print(f"[문제 {i}]")
             print(quiz.question, "\n")
