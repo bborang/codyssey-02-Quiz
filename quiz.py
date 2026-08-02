@@ -209,3 +209,26 @@ class QuizGame:
     def show_best_score(self):
         """최고 점수 출력 기능"""
         print(f"\n🏆 현재 최고 점수: {self.best_score}점")
+
+    def delete_quiz(self):
+        """등록된 퀴즈 삭제 기능 (보너스 과제)"""
+        if not self.quizzes:
+            print("\n⚠️ 삭제할 퀴즈가 없습니다.")
+            return
+            
+        print("\n🗑️ 삭제할 퀴즈를 선택해주세요.")
+        # 삭제할 퀴즈 번호를 보기 쉽게 전체 리스트 출력
+        self.list_quizzes()
+        
+        max_q = len(self.quizzes)
+        # 0을 입력하면 취소하는 편의 기능 추가
+        delete_idx = get_valid_input(f"삭제할 퀴즈 번호 입력 (1-{max_q}, 취소는 0): ", 0, max_q)
+        
+        if delete_idx == 0:
+            print("삭제가 취소되었습니다.")
+            return
+            
+        # 선택한 번호(1-indexed)를 0-indexed로 변환하여 리스트에서 삭제
+        deleted_quiz = self.quizzes.pop(delete_idx - 1)
+        print(f"\n✅ 퀴즈가 성공적으로 삭제되었습니다: {deleted_quiz.question}")
+        self.save_data()

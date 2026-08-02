@@ -9,8 +9,9 @@ def display_menu():
     print("1. 퀴즈 풀기")
     print("2. 퀴즈 추가")
     print("3. 퀴즈 목록")
-    print("4. 최고 점수 확인")
-    print("5. 종료")
+    print("4. 퀴즈 삭제")
+    print("5. 최고 점수 확인")
+    print("6. 종료")
     print("========================================")
 
 def main():
@@ -20,7 +21,7 @@ def main():
     while True:
         try:
             display_menu()
-            choice = get_valid_input("원하시는 메뉴 번호를 입력하세요: ", 1, 5)
+            choice = get_valid_input("원하시는 메뉴 번호를 입력하세요: ", 1, 6)
             
             if choice == 1:
                 game.play_quiz()
@@ -29,8 +30,10 @@ def main():
             elif choice == 3:
                 game.list_quizzes()
             elif choice == 4:
-                game.show_best_score()
+                game.delete_quiz()
             elif choice == 5:
+                game.show_best_score()
+            elif choice == 6:
                 print("\n 게임을 정상적으로 종료합니다.")
                 game.save_data()
                 break
