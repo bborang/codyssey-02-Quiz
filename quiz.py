@@ -114,11 +114,15 @@ class QuizGame:
             print("\n⚠️ 등록된 퀴즈가 없습니다! 2번 메뉴를 통해 퀴즈를 추가해주세요.")
             return
 
-        print(f"\n📝 퀴즈를 시작합니다! (총 {len(self.quizzes)}문제)")
+        max_q = len(self.quizzes)
+        print(f"\n총 {max_q}개의 퀴즈가 준비되어 있습니다.")
+        num_to_play = get_valid_input(f"몇 문제를 푸시겠습니까? (1-{max_q}): ", 1, max_q)
+
+        print(f"\n📝 퀴즈를 시작합니다! (선택한 {num_to_play}문제 출제)")
         score = 0
         
-        # 보너스 과제 1: 퀴즈 순서 랜덤 섞기
-        play_list = random.sample(self.quizzes, len(self.quizzes))
+        # 보너스 과제 1 & 2: 지정된 개수만큼 랜덤으로 문제 뽑기
+        play_list = random.sample(self.quizzes, num_to_play)
         
         for i, quiz in enumerate(play_list, 1):
             print("\n----------------------------------------")
@@ -139,7 +143,7 @@ class QuizGame:
                 print(f"❌ 오답입니다! (정답은 {quiz.answer}번)")
                 
         print("\n========================================")
-        print(f"🏆 결과: {len(self.quizzes)}문제 중 {score}문제 정답!")
+        print(f"🏆 결과: {num_to_play}문제 중 {score}문제 정답!")
         print("========================================")
         
         if score > self.best_score:
