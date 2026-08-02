@@ -8,7 +8,8 @@
                 "docker exec",
                 "docker build"
             ],
-            "answer": 2
+            "answer": 2,
+            "hint": "새로운 컨테이너를 생성(create)하고 실행(start)하는 것을 한 번에 처리하며, '달리다'라는 뜻을 가진 영단어입니다."
         },
         {
             "question": "이미지 생성을 위해 작성하는 자동화 레시피 파일의 이름은?",
@@ -18,7 +19,8 @@
                 "Dockerconfig",
                 "Makefile"
             ],
-            "answer": 2
+            "answer": 2,
+            "hint": "이름 자체가 'Docker'와 '파일(file)'이 합쳐진 단어입니다. (대문자로 시작합니다)"
         },
         {
             "question": "현재 내 컴퓨터에 실행 중인 컨테이너 목록을 확인하는 명령어는?",
@@ -28,7 +30,8 @@
                 "docker images",
                 "docker info"
             ],
-            "answer": 1
+            "answer": 1,
+            "hint": "리눅스에서 현재 실행 중인 프로세스 상태(Process Status)를 확인할 때 쓰는 2글자 명령어와 동일합니다."
         },
         {
             "question": "새로운 터미널 세션을 열기 위해, 실행 중인 컨테이너 내부에 접속하여 터미널을 열기 위해 사용하는 명령어는?",
@@ -38,7 +41,8 @@
                 "docker exec",
                 "docker enter"
             ],
-            "answer": 3
+            "answer": 3,
+            "hint": "'실행하다(execute)'라는 영단어의 앞 4글자를 딴 명령어입니다."
         },
         {
             "question": "컨테이너를 삭제해도 데이터가 날아가지 않게 저장소를 연결하는 개념은?",
@@ -48,7 +52,8 @@
                 "Docker Hub",
                 "Volume"
             ],
-            "answer": 4
+            "answer": 4,
+            "hint": "소리 크기를 조절할 때 쓰는 단어(V___)와 똑같은 스펠링을 가졌습니다."
         }
     ],
     "best_score": 0
